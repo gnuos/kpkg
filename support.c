@@ -40,6 +40,8 @@
 #include "datastructs.h"
 #include "support.h"
 
+extern ssize_t getline(char **lineptr, size_t *n, FILE *stream);
+
 static void GetSysDate(char *out)
 {
 	time_t rawtime;

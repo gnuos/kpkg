@@ -68,7 +68,7 @@ int RemoveFileCallback(void *args, int numCols, char **results, char **columnNam
 		/* Save directories, so when all files are removed, we clean up those */
 		if (S_ISDIR(myfile.st_mode)) {
 			ptr->directories = realloc(ptr->directories, (ptr->index+1)*sizeof(char *));
-			ptr->directories[ptr->index] = strdup(filename);
+			strcpy(ptr->directories[ptr->index], filename);
 			ptr->index++;
 		}
 		else {
@@ -122,28 +122,28 @@ int SaveListOfLinks(void *args, int numCols, char **results, char **columnNames)
 
 
 	ptr->name = realloc(ptr->name, (ptr->index+1)*sizeof(char *));
-	ptr->name[ptr->index] = name?strdup(name):strdup("No name");
+	strcpy(ptr->name[ptr->index], name ? name : "No name");
 
 	ptr->version = realloc(ptr->version, (ptr->index+1)*sizeof(char *));
-	ptr->version[ptr->index] = version?strdup(version):strdup("No version");
+	strcpy(ptr->version[ptr->index], version ? version : "No version");
 
 	ptr->arch = realloc(ptr->arch, (ptr->index+1)*sizeof(char *));
-	ptr->arch[ptr->index] = arch?strdup(arch):strdup("No arch");
+	strcpy(ptr->arch[ptr->index], arch ? arch : "No arch");
 
 	ptr->build = realloc(ptr->build, (ptr->index+1)*sizeof(char *));
-	ptr->build[ptr->index] = build?strdup(build):strdup("No build");
+	strcpy(ptr->build[ptr->index], build ? build : "No build");
 
 	ptr->extension = realloc(ptr->extension, (ptr->index+1)*sizeof(char *));
-	ptr->extension[ptr->index] = extension?strdup(extension):strdup("No extension");
+	strcpy(ptr->extension[ptr->index], extension ? extension : "No extension");
 
 	ptr->links = realloc(ptr->links, (ptr->index+1)*sizeof(char *));
-	ptr->links[ptr->index] = link?strdup(link):strdup("No link");
+	strcpy(ptr->links[ptr->index], link ? link : "No link");
 
 	ptr->comments = realloc(ptr->comments, (ptr->index+1)*sizeof(char *));
-	ptr->comments[ptr->index] = comment?strdup(comment):strdup("No comments");
+	strcpy(ptr->comments[ptr->index], comment ? comment : "No comments");
 
 	ptr->crcs = realloc(ptr->crcs, (ptr->index+1)*sizeof(char *));
-	ptr->crcs[ptr->index] = crc?strdup(crc):strdup("No CRC");
+	strcpy(ptr->crcs[ptr->index], crc ? crc : "No CRC");
 
 	ptr->index++;
 
@@ -329,7 +329,7 @@ int GetFieldCallback(void *args, int numCols, char **results, char **columnNames
 {
 	char *value = (char *)args;
 
-	strncpy(value, strdup(results[0]), PATH_MAX);
+	strncpy(value, results[0], PATH_MAX);
 
 	return 0;
 }
@@ -352,11 +352,11 @@ int SavePackageListCallback(void *args, int numCols, char **results, char **colu
 	ptr->builds = realloc(ptr->builds, (ptr->index+1)*sizeof(char *));
 	for (i=0; i<numCols; i++) {
 		if (!strcmp(columnNames[i], "NAME"))
-			ptr->packages[ptr->index] = strdup(results[i]);
+			strcpy(ptr->packages[ptr->index], results[i]);
 		if (!strcmp(columnNames[i], "VERSION"))
-			ptr->versions[ptr->index] = strdup(results[i]);
+			strcpy(ptr->versions[ptr->index], results[i]);
 		if (!strcmp(columnNames[i], "BUILD"))
-			ptr->builds[ptr->index] = strdup(results[i]);
+			strcpy(ptr->builds[ptr->index], results[i]);
 	}
 	ptr->index++;
 

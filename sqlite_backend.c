@@ -39,6 +39,12 @@
 
 #include "datastructs.h"
 
+extern sqlite3 *Database;
+extern char *dbname;
+extern char *MIRRORS_DIRECTORY;
+
+extern int local_only;
+
 /**
  * This function removes the common data package from the PACKAGES table
  * @param name A package name
@@ -513,7 +519,7 @@ int ExistsPkg(PkgData *Data)
 	sqlite3_close(Database);
 
 	if (*Data->version == '\0') {
-		strncpy(Data->version, versionb, PKG_VERSION);
+		strcpy(Data->version, versionb);
 		return 0;
 	}
 

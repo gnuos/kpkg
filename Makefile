@@ -1,33 +1,22 @@
-STRIP=strip
-STRIP_FLAGS_STATIC=--strip-debug
-STRIP_FLAGS_DYNAMIC=--strip-unneeded
-CC=cc
-CFLAGS=-O2 -pedantic -Wall -fcommon
-#CFLAGS_DEBUG=-gdwarf-2 -g3
-SQLITE3=/usr/lib/libsqlite3.a
-CURL=/usr/lib/libcurl.a
-SSL=/usr/lib/libssl.a /usr/lib/libcrypto.a
-BZIP2=/usr/lib/libbz2.a
-LZMA=/usr/lib/liblzma.a
-ZLIB=/usr/lib/libz.a
-LIBARCHIVE=/usr/lib/libarchive.a
-ACL=/usr/lib/libacl.a
-LZO=/usr/lib/liblzo2.a
-OPENSSL=/usr/lib/libssl.a
-ZSTD=/usr/lib/libzstd.a
-NGHTTP2=/usr/lib/libnghttp2.a
-EXPAT=/usr/lib/libexpat.a
-DYNAMIC_KPKG_LDFLAGS=-lsqlite3 -larchive -lpthread -llzma -lbz2 -lz -lm -lc -lcurl -lssl -lcrypto -lssl -lacl -ldl -lnghttp2 -lzstd
-STATIC_KPKG_LDFLAGS=$(SQLITE3) $(CURL) $(SSL) $(LIBARCHIVE) $(BZIP2) $(LZMA) $(ZLIB) $(READLINE) $(NCURSES) $(ACL) $(RTMP) $(LZO) $(OPENSSL) $(ZSTD) $(NGHTTP2) $(EXPAT) -ldl -lpthread -lm
+STRIP ?= strip
+STRIP_FLAGS_STATIC    =--strip-debug
+STRIP_FLAGS_DYNAMIC   =--strip-unneeded
+STATIC_KPKG_LDFLAGS  ?= -L/usr/lib/x86_64-linux-gnu
 
-LDFLAGS_DBCREATER=-lsqlite3 -lz
+CC ?= cc
+CFLAGS=-O2 -Wall -std=c11 -I/usr/include -I/usr/include/x86_64-linux-gnu
+
+DYNAMIC_KPKG_LDFLAGS := -lz -larchive -llzma -lbz2 -llz4 -llz4 -lcurl -lssl -lcrypto -lssl -lacl -lnghttp2 -lzstd -lsqlite3 -lexpat -ldl -lpthread -lm -lc
+
+CURL_LGFLAGS         := -Wl,-Bstatic,-pie -lcurl -lnghttp2 -lssh2 -lnspr4 -lzstd -lz
+STATIC_KPKG_LDFLAGS  += -lcrypto -lnettle -lssl -larchive -lbz2 -llzma -llz4 -llzo2 -lzstd -lreadline -lncurses -lacl -lsqlite3 -lexpat -ldl -lpthread -lm -lc
 
 all: support.o sqlite_callbacks.o sqlite_backend.o file_operation.o kpkg.o
-	$(CC) $(CFLAGS) -o kpkg kpkg.o sqlite_backend.o sqlite_callbacks.o support.o file_operation.o $(STATIC_KPKG_LDFLAGS)
+	$(CC) $(CFLAGS) -o kpkg sqlite_backend.o sqlite_callbacks.o support.o file_operation.o kpkg.o $(CURL_LGFLAGS) $(STATIC_KPKG_LDFLAGS)
 	$(STRIP) $(STRIP_FLAGS_STATIC) kpkg
 
 kpkg_dynamic: support.o sqlite_callbacks.o sqlite_backend.o file_operation.o kpkg.o
-	$(CC) $(CFLAGS) $(CFLAGS_DEBUG) -o kpkg_dynamic kpkg.o sqlite_backend.o sqlite_callbacks.o support.o file_operation.o $(DYNAMIC_KPKG_LDFLAGS)
+	$(CC) $(CFLAGS) -o kpkg_dynamic sqlite_backend.o sqlite_callbacks.o support.o file_operation.o kpkg.o $(DYNAMIC_KPKG_LDFLAGS)
 	$(STRIP) $(STRIP_FLAGS_DYNAMIC) kpkg_dynamic
 
 file_operation.o: file_operation.c datastructs.h sqlite_callbacks.h

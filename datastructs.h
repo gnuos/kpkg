@@ -47,6 +47,7 @@
 #include <fcntl.h>
 #include <errno.h>
 #include <signal.h>
+#include <linux/limits.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/mman.h>
@@ -81,7 +82,6 @@
 
 #define KPKG_DB_HOME_DEFAULT "/var/packages/installed.kdb"
 #define MIRRORS_DIRECTORY_DEFAULT "/var/packages/mirrors"
-#define PACKAGES_DIRECTORY_DEFAULT "/var/packages/downloads"
 
 #define EXCEPTIONS_FILE "/etc/kpkg.exceptions"
 #define INIT 0
@@ -136,17 +136,5 @@ typedef struct _ResultFound {
 	int found;
 	char mirror_name[NAME_MAX];
 } ResultFound;
-
-char *dbname;
-sqlite3 *Database;
-char *HOME_ROOT;
-char *MIRRORS_DIRECTORY;
-char *PACKAGES_DIRECTORY;
-int noreadme;
-int skip;
-int force;
-int local_only;
-char **Exceptions;
-int TotalExceptions;
 
 #endif

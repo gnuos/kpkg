@@ -40,6 +40,11 @@
 #include "datastructs.h"
 #include "support.h"
 
+extern int noreadme;
+
+char **Exceptions;
+int TotalExceptions;
+
 /**
  * This function initialize the array of exceptions from the /etc/kpkg.exceptions file
  * @param mode The mode to run this function: INIT = only initialize array and number of exceptions. DEFAULT, loads the exceptions from the file
@@ -65,7 +70,7 @@ void LoadExceptions(int mode)
 
 		TotalExceptions += 1;
 		Exceptions = realloc(Exceptions, TotalExceptions * sizeof(char *));
-		Exceptions[TotalExceptions-1] = strdup(tmp);
+		strcpy(Exceptions[TotalExceptions-1], tmp);
 	}
 	fclose(fp);
 }
@@ -150,7 +155,7 @@ int ExtractPackage(const char *filename, PkgData *Data)
 
 			/* Save the file to push it in the database */
 			Data->files =  realloc(Data->files, (Data->files_num+1)*sizeof(char *));
-			Data->files[Data->files_num++] = strdup(mfile);
+			strcpy(Data->files[Data->files_num++], mfile);
 		}
 	}
 	/* Clean up */
@@ -284,10 +289,10 @@ int Download(char *link, char *output)
 
 	if (!display) {
 		curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 0);
-		curl_easy_setopt(curl, CURLOPT_PROGRESSFUNCTION, progress_func);
+		curl_easy_setopt(curl, CURLOPT_XFERINFOFUNCTION, progress_func);
 	}
 	else
-		curl_easy_setopt(curl, CURLOPT_PROGRESSFUNCTION, NULL);
+		curl_easy_setopt(curl, CURLOPT_XFERINFOFUNCTION, NULL);
 
 	/* Do the job */
 	if((res = curl_easy_perform(curl)) != CURLE_OK) {

@@ -48,6 +48,6 @@ char *RemoveExtension(char *s);
 void cleanup(int sig);
 int GetLinkFromInput(ListOfLinks *Links);
 
-char fileremove[PATH_MAX];
+static char fileremove[PATH_MAX];
 
 #endif

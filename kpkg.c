@@ -44,6 +44,20 @@
 #include "file_operation.h"
 #include "version.h"
 
+extern char *strdup (const char *);
+extern int setenv (const char *, const char *, int);
+extern ssize_t getline(char **, size_t *, FILE *);
+
+char *dbname;
+int noreadme;
+int skip;
+int force;
+int local_only;
+sqlite3 *Database;
+
+char *HOME_ROOT;
+char *PACKAGES_DIRECTORY;
+char *MIRRORS_DIRECTORY;
 
 /**
  * This function removes the whole package structure from PACKAGES and FILESPKG tables
