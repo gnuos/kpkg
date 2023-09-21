@@ -40,8 +40,6 @@
 #ifndef KPKG_H
 #define KPKG_H
 
-#define PACKAGES_DIRECTORY_DEFAULT "/var/packages/downloads"
-
 int RemovePkg(char *name, int silent);
 int InstallPkg(char *package);
 int DownloadPkg(char *name, char *out);

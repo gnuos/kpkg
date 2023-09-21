@@ -1,15 +1,15 @@
 STRIP ?= strip
-STRIP_FLAGS_STATIC    =--strip-debug
-STRIP_FLAGS_DYNAMIC   =--strip-unneeded
+STRIP_FLAGS_STATIC    = --strip-debug
+STRIP_FLAGS_DYNAMIC   = --strip-unneeded
 STATIC_KPKG_LDFLAGS  ?= -L/usr/lib/x86_64-linux-gnu
 
 CC ?= cc
-CFLAGS=-O2 -Wall -std=c11 -I/usr/include -I/usr/include/x86_64-linux-gnu
+CFLAGS ?= -O2 -Wall -std=c11 -I/usr/include -I/usr/include/x86_64-linux-gnu
 
 DYNAMIC_KPKG_LDFLAGS := -lz -larchive -llzma -lbz2 -llz4 -llz4 -lcurl -lssl -lcrypto -lssl -lacl -lnghttp2 -lzstd -lsqlite3 -lexpat -ldl -lpthread -lm -lc
 
-CURL_LGFLAGS         := -Wl,-Bstatic,-pie -lcurl -lnghttp2 -lssh2 -lnspr4 -lzstd -lz
-STATIC_KPKG_LDFLAGS  += -lcrypto -lnettle -lssl -larchive -lbz2 -llzma -llz4 -llzo2 -lzstd -lreadline -lncurses -lacl -lsqlite3 -lexpat -ldl -lpthread -lm -lc
+CURL_LGFLAGS         := -Wl,-Bstatic,-pie -lcurl -lnghttp2 -lssh2 -lnspr4
+STATIC_KPKG_LDFLAGS  += -lcrypto -lnettle -lssl -larchive -lbz2 -llzma -llz4 -llzo2 -lzstd -lz -lreadline -lncurses -lacl -lsqlite3 -lexpat -lpthread -ldl -lm -lc
 
 all: support.o sqlite_callbacks.o sqlite_backend.o file_operation.o kpkg.o
 	$(CC) $(CFLAGS) -o kpkg sqlite_backend.o sqlite_callbacks.o support.o file_operation.o kpkg.o $(CURL_LGFLAGS) $(STATIC_KPKG_LDFLAGS)

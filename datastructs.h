@@ -82,6 +82,7 @@
 
 #define KPKG_DB_HOME_DEFAULT "/var/packages/installed.kdb"
 #define MIRRORS_DIRECTORY_DEFAULT "/var/packages/mirrors"
+#define PACKAGES_DIRECTORY_DEFAULT "/var/packages/downloads"
 
 #define EXCEPTIONS_FILE "/etc/kpkg.exceptions"
 #define INIT 0
